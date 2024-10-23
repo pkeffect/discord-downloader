@@ -1,4 +1,6 @@
 # Discord Image and GIF Downloader
+![image](https://github.com/user-attachments/assets/eaed13c4-02ef-4196-abc7-ab657f113df7)
+
 
 This project is a web application that allows users to easily download images and GIFs from Discord by dragging and dropping them into the browser. It uses Flask for the backend and vanilla JavaScript with Tailwind CSS for the frontend.
 

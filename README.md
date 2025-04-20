@@ -7,7 +7,7 @@
 A lightweight, containerized web application that allows you to easily download images, GIFs, and videos from Discord by simply dragging and dropping them into your browser.
 
 <p align="center">
-  <img src="https://github.com/yourusername/discord-media-download/raw/main/screenshots/main-interface.png" alt="Main Interface" width="600">
+<img src="https://github.com/pkeffect/discord-downloader/blob/main/screenshots/main-interface.png" alt="Main Interface" width="600">
   <br>
   <em>Modern, dark-themed interface with easy drag & drop functionality</em>
 </p>
@@ -33,13 +33,13 @@ A lightweight, containerized web application that allows you to easily download 
 ## Screenshots
 
 <p align="center">
-  <img src="https://github.com/yourusername/discord-media-download/raw/main/screenshots/debug-interface.png" alt="Debug Interface" width="600">
+    <img src="https://github.com/pkeffect/discord-downloader/blob/main/screenshots/debug-interface.png" alt="Debug Interface" width="600">
   <br>
   <em>Auto-refreshing debug interface with file monitoring and thumbnails</em>
 </p>
 
 <p align="center">
-  <img src="https://github.com/yourusername/discord-media-download/raw/main/screenshots/logs-interface.png" alt="Logs Interface" width="600">
+ <img src="https://github.com/pkeffect/discord-downloader/blob/main/screenshots/logs-interface.png" alt="Logs Interface" width="600">
   <br>
   <em>Advanced log viewer with filtering and search capabilities</em>
 </p>

@@ -256,9 +256,14 @@ def process_download(image_url):
         logger.debug(f"Content type: {content_type}")
         
         # Check for HTML content type which might indicate we didn't get a direct media URL
-        if 'text/html' in content_type and not image_url.endswith('.html'):
+        if 'text/html' in content_type and not image_url.endswith('.html') and not 'video/mp4' in content_type:
             logger.warning(f"Received HTML content type for non-HTML URL: {image_url}")
-            return {'success': False, 'message': 'Received HTML content instead of media. This may not be a direct media URL.'}
+            # Check if the URL points to a video hosting site
+            if any(domain in image_url for domain in ['youtube.com', 'vimeo.com', 'dailymotion.com', 'discord.com']):
+                # Let's try to process it as a video anyway
+                logger.info(f"URL appears to be from a video site, attempting to process anyway: {image_url}")
+            else:
+                return {'success': False, 'message': 'Received HTML content instead of media. This may not be a direct media URL.'}
         
         # Generate appropriate filename
         filename = generate_filename(image_url, content_type)

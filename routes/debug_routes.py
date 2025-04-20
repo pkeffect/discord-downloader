@@ -7,7 +7,7 @@ import socket
 import time
 from datetime import datetime
 import sys
-from config import DOWNLOAD_DIR, LOG_DIR, APP_VERSION, APP_NAME
+from config import DOWNLOAD_DIR, LOG_DIR, APP_VERSION, APP_NAME, CONSOLE_HEIGHT
 
 logger = logging.getLogger('discord_media_download')
 
@@ -60,7 +60,7 @@ def debug():
         'python_modules': sorted([m.__name__ for m in sys.modules.values() if hasattr(m, '__name__')])
     }
     
-    return render_template('debug.html', debug_info=debug_info)
+    return render_template('debug.html', debug_info=debug_info, console_height=CONSOLE_HEIGHT)
 
 @debug_bp.route('/logs')
 def logs():
@@ -82,7 +82,7 @@ def logs():
         logs_content = f"Log file not found at {log_file}"
         logger.warning(f"Log file not found at {log_file}")
     
-    return render_template('logs.html', logs=logs_content)
+    return render_template('logs.html', logs=logs_content, console_height=CONSOLE_HEIGHT)
 
 @debug_bp.route('/downloads/<path:filename>')
 def download_file(filename):

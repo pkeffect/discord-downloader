@@ -9,9 +9,6 @@
     <title>{% block title %}Discord Media Download{% endblock %}</title>
     <!-- Fixed favicon reference -->
     <link rel="icon" href="/static/favicon-svg.svg" type="image/svg+xml">
-    <!-- Added defer to prevent layout shifting -->
-    <script src="https://cdn.tailwindcss.com" defer></script>
-    <script src="/static/js/tailwind-config.js" defer></script>
     <!-- Fixed CSS filename reference -->
     <link rel="stylesheet" href="/static/css/style.css">
     {% block extra_head %}{% endblock %}
@@ -28,7 +25,9 @@
     <!-- Footer -->
     {% include 'footer.html' %}
 
-    <!-- Scripts -->
+    <!-- Scripts moved to end of body -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/static/js/tailwind-config.js"></script>
     <script src="/static/js/main.js"></script>
     {% block extra_scripts %}{% endblock %}
 </body>

@@ -1,6 +1,5 @@
 from flask import Flask, send_from_directory, request, render_template
 import os
-import shutil
 from routes.main_routes import main_bp
 from routes.download_routes import download_bp
 from routes.debug_routes import debug_bp
@@ -20,36 +19,12 @@ for directory in STATIC_DIRS:
 os.makedirs(LOG_DIR, exist_ok=True)
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-# Create symlink from style.css to styles.css for backward compatibility
-css_source = os.path.join(app.static_folder, 'css', 'style.css')
-css_target = os.path.join(app.static_folder, 'css', 'styles.css')
-if os.path.exists(css_source) and not os.path.exists(css_target):
-    try:
-        # For Windows compatibility, use copy instead of symlink
-        shutil.copy2(css_source, css_target)
-        logger.info(f"Created styles.css from style.css")
-    except Exception as e:
-        logger.warning(f"Could not create styles.css: {e}")
-
-# Convert SVG favicon to ICO if needed
-favicon_svg = os.path.join(app.static_folder, 'favicon-svg.svg')
-favicon_ico = os.path.join(app.static_folder, 'favicon.ico')
-if os.path.exists(favicon_svg) and not os.path.exists(favicon_ico):
-    try:
-        # This is a simple file copy as a temporary solution
-        # In a production environment, you would use a library like Pillow 
-        # to properly convert SVG to ICO
-        shutil.copy2(favicon_svg, favicon_ico)
-        logger.info(f"Created temporary favicon.ico from favicon-svg.svg")
-    except Exception as e:
-        logger.warning(f"Could not create favicon.ico: {e}")
-
 # Add route to serve favicon.ico directly
 @app.route('/static/favicon.ico')
 def favicon():
     """Serve favicon.ico from static directory"""
     return send_from_directory(os.path.join(app.root_path, 'static'),
-                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
+                             'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 # Add function to Jinja environment to include templates
 @app.context_processor
@@ -74,13 +49,13 @@ app.register_blueprint(debug_bp)
 def page_not_found(e):
     logger.warning(f"404 error: {request.path}")
     return render_template('error.html', error_code=404, 
-                          error_message="The page you requested was not found."), 404
+                         error_message="The page you requested was not found."), 404
 
 @app.errorhandler(500)
 def internal_server_error(e):
     logger.error(f"500 error: {str(e)}")
     return render_template('error.html', error_code=500,
-                          error_message="An internal server error occurred."), 500
+                         error_message="An internal server error occurred."), 500
 
 if __name__ == '__main__':
     logger.info(f"Starting {APP_NAME} v{APP_VERSION}")

@@ -108,7 +108,7 @@ def get_unique_filepath(filename):
     # Get base name and extension
     base_name, ext = os.path.splitext(filename)
     
-    # Try adding sequential numbers until we find an unused filename
+    # Try sequential numbers until we find an unused filename
     counter = 1
     while True:
         numbered_filename = f"{base_name}_{counter:03d}{ext}"

@@ -22,7 +22,7 @@
     </div>
 </div>
 
-<div class="bg-dark-800 p-4 rounded-lg shadow-lg log-container" id="log-content">
+<div class="bg-dark-800 p-4 rounded-lg shadow-lg log-container" id="log-content" style="height: {{ console_height }}px; overflow-y: auto;">
     <!-- The pre element with word-wrap and overflow-wrap properties to ensure log lines wrap -->
     <pre id="logs" class="whitespace-pre-wrap break-words">{{ logs }}</pre>
 </div>

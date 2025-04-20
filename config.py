@@ -42,6 +42,9 @@ DEFAULT_CONFIG = {
             "enabled": True,
             "interval": 5000
         },
+        "console": {
+            "height": 400
+        },
         "file_types": {
             "images": [".jpg", ".jpeg", ".png", ".gif", ".webp"],
             "videos": [".mp4", ".webm"],
@@ -93,3 +96,4 @@ REQUEST_CHUNK_SIZE = 8192  # Bytes for streaming downloads
 APP_VERSION = CONFIG['app']['version']
 APP_NAME = CONFIG['app']['name']
 APP_DEBUG_MODE = CONFIG['app']['debug_mode']
+CONSOLE_HEIGHT = CONFIG['features'].get('console', {}).get('height', 400)

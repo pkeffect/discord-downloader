@@ -30,10 +30,21 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__, static_folder='static', template_folder='templates')
 
+# Create static directories if they don't exist
+for directory in ['static/js', 'static/css']:
+    os.makedirs(directory, exist_ok=True)
+
 # Create download directory if it doesn't exist
 DOWNLOAD_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'downloads')
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 logger.info(f"Download directory set to: {DOWNLOAD_DIR}")
+
+# Create the server-side include function to handle template inclusion
+def include_template(template_name):
+    return render_template(template_name)
+
+# Register the function with Jinja2
+app.jinja_env.globals.update(include_template=include_template)
 
 @app.route('/')
 def index():
@@ -213,7 +224,39 @@ def download_image():
             # Apply correct extension based on content type
             if 'image/jpeg' in content_type or 'image/jpg' in content_type:
                 if not file_ext or file_ext not in ['jpg', 'jpeg']:
-                    filename = f"{filename.split('.')[0]}.jpg"
+                    filename = f"{filename.split('.')[0]}.gif"
+                logger.debug(f"Changed extension to gif based on URL: {filename}")
+                
+        # Final check to ensure we have a valid extension
+        if '.' not in filename:
+            logger.warning(f"No file extension detected for: {filename}, URL: {image_url}")
+            return jsonify({'success': False, 'message': 'Could not determine file type. Please try a different file.'})
+            
+        logger.debug(f"Final filename: {filename}")
+        
+        # Save the file
+        file_path = os.path.join(DOWNLOAD_DIR, filename)
+        logger.info(f"Saving file to: {file_path}")
+        
+        with open(file_path, 'wb') as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+        
+        # Verify file was saved
+        if os.path.exists(file_path):
+            file_size = os.path.getsize(file_path)
+            logger.info(f"File saved successfully. Size: {file_size} bytes")
+            return jsonify({
+                'success': True, 
+                'message': f'Media downloaded successfully as {filename}'
+            })
+        else:
+            logger.error(f"File was not saved at {file_path}")
+            return jsonify({'success': False, 'message': 'File was not saved'})
+        
+    except Exception as e:
+        logger.exception(f"Error downloading media: {str(e)}")
+        return jsonify({'success': False, 'message': f'Error: {str(e)}'})"{filename.split('.')[0]}.jpg"
                     logger.debug(f"Changed extension to jpg: {filename}")
             elif 'image/gif' in content_type:
                 if not file_ext or file_ext != 'gif':
@@ -245,74 +288,4 @@ def download_image():
                 filename = f"{filename.split('.')[0]}.mp4"
                 logger.debug(f"Changed extension to mp4 based on URL: {filename}")
             elif '.gif' in image_url.lower() and (not file_ext or file_ext != 'gif'):
-                filename = f"{filename.split('.')[0]}.gif"
-                logger.debug(f"Changed extension to gif based on URL: {filename}")
-                
-        # Final check to ensure we have a valid extension
-        if '.' not in filename:
-            logger.warning(f"No file extension detected for: {filename}, URL: {image_url}")
-            return jsonify({'success': False, 'message': 'Could not determine file type. Please try a different file.'})
-            
-        logger.debug(f"Final filename: {filename}")
-        
-        # Save the file
-        file_path = os.path.join(DOWNLOAD_DIR, filename)
-        logger.info(f"Saving file to: {file_path}")
-        
-        with open(file_path, 'wb') as f:
-            for chunk in response.iter_content(chunk_size=8192):
-                f.write(chunk)
-        
-        # Verify file was saved
-        if os.path.exists(file_path):
-            file_size = os.path.getsize(file_path)
-            logger.info(f"File saved successfully. Size: {file_size} bytes")
-            return jsonify({
-                'success': True, 
-                'message': f'Image downloaded successfully as {filename}'
-            })
-        else:
-            logger.error(f"File was not saved at {file_path}")
-            return jsonify({'success': False, 'message': 'File was not saved'})
-        
-    except Exception as e:
-        logger.exception(f"Error downloading image: {str(e)}")
-        return jsonify({'success': False, 'message': f'Error: {str(e)}'})
-
-@app.route('/downloads/<path:filename>')
-def download_file(filename):
-    return send_from_directory(DOWNLOAD_DIR, filename, as_attachment=True)
-
-@app.route('/debug')
-def debug_info():
-    """A simple debug page to help with troubleshooting"""
-    debug_info = {
-        'download_dir': DOWNLOAD_DIR,
-        'download_dir_exists': os.path.exists(DOWNLOAD_DIR),
-        'download_dir_writable': os.access(DOWNLOAD_DIR, os.W_OK),
-        'files_in_download_dir': sorted(os.listdir(DOWNLOAD_DIR)) if os.path.exists(DOWNLOAD_DIR) else [],
-        'app_directory': os.path.dirname(os.path.abspath(__file__)),
-        'environment': dict(os.environ)
-    }
-    
-    return render_template('debug.html', debug_info=debug_info)
-
-@app.route('/logs')
-def view_logs():
-    """View application logs in the browser"""
-    # Get logs from the StringIO buffer
-    log_content = log_stream.getvalue()
-    
-    # Read from log file if the buffer is empty
-    if not log_content and os.path.exists('downloads/app.log'):
-        try:
-            with open('downloads/app.log', 'r') as f:
-                log_content = f.read()
-        except Exception as e:
-            log_content = f"Error reading log file: {str(e)}"
-    
-    return render_template('logs.html', logs=log_content)
-
-if __name__ == '__main__':
-    logger.info("Starting Discord Image Downloader app...")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+                filename = f

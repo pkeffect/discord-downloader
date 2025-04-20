@@ -1,13 +1,13 @@
-# Discord Image Downloader
+# Discord Media Download
 
-![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)
 ![Docker](https://img.shields.io/badge/docker-compatible-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 
 A lightweight, containerized web application that allows you to easily download images, GIFs, and videos from Discord by simply dragging and dropping them into your browser.
 
 <p align="center">
-  <img src="https://github.com/yourusername/discord-image-downloader/raw/main/screenshots/main-interface.png" alt="Main Interface" width="600">
+  <img src="https://github.com/yourusername/discord-media-download/raw/main/screenshots/main-interface.png" alt="Main Interface" width="600">
   <br>
   <em>Modern, dark-themed interface with easy drag & drop functionality</em>
 </p>
@@ -22,17 +22,18 @@ A lightweight, containerized web application that allows you to easily download 
 - **Live Monitoring**: Real-time log viewing and auto-refreshing debug interface
 - **Advanced Filtering**: Search and filter logs by level (INFO, WARNING, ERROR)
 - **Containerized Deployment**: Easy setup with Docker
+- **Modular Architecture**: Organized codebase with separated components for easier maintenance
 
 ## Screenshots
 
 <p align="center">
-  <img src="https://github.com/yourusername/discord-image-downloader/raw/main/screenshots/debug-interface.png" alt="Debug Interface" width="600">
+  <img src="https://github.com/yourusername/discord-media-download/raw/main/screenshots/debug-interface.png" alt="Debug Interface" width="600">
   <br>
   <em>Auto-refreshing debug interface with file monitoring</em>
 </p>
 
 <p align="center">
-  <img src="https://github.com/yourusername/discord-image-downloader/raw/main/screenshots/logs-interface.png" alt="Logs Interface" width="600">
+  <img src="https://github.com/yourusername/discord-media-download/raw/main/screenshots/logs-interface.png" alt="Logs Interface" width="600">
   <br>
   <em>Advanced log viewer with filtering and search capabilities</em>
 </p>
@@ -48,8 +49,8 @@ A lightweight, containerized web application that allows you to easily download 
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/discord-image-downloader.git
-   cd discord-image-downloader
+   git clone https://github.com/yourusername/discord-media-download.git
+   cd discord-media-download
    ```
 
 2. Create the downloads folder with proper permissions:
@@ -72,7 +73,7 @@ A lightweight, containerized web application that allows you to easily download 
 
 1. Open Discord in your browser or desktop app
 2. Find an image, GIF, or video you want to download
-3. Drag the media directly into the drop area in the Discord Image Downloader web app
+3. Drag the media directly into the drop area in the Discord Media Download web app
 4. The file will be downloaded to the `downloads` folder with the appropriate file extension
 
 ## Technical Details
@@ -85,23 +86,41 @@ The application consists of:
 - **Tailwind CSS**: For responsive and modern UI
 - **Docker**: For containerization and easy deployment
 - **JavaScript**: For real-time updates and UI interactions
+- **Modular Components**: Separated header, footer, and functionality files
 
 ### File Structure
 
 ```
-.
-├── app.py                 # Flask application
-├── tenor_handler.py       # Special handler for Tenor URLs
-├── templates
-│   ├── index.html         # Main HTML page
-│   ├── debug.html         # Debug information page
-│   └── logs.html          # Log viewer page
-├── downloads              # Where downloaded files are saved
-├── logs                   # Application logs
-├── test_download.py       # Utility to test downloads
-├── requirements.txt       # Python dependencies
-├── Dockerfile             # Docker configuration
-└── docker-compose.yml     # Docker Compose configuration
+discord-media-download/
+│
+├── app.py                   # Main Flask application
+├── tenor_handler.py         # Handler for Tenor GIFs
+├── test_download.py         # Utility script for testing downloads
+├── compose.yaml             # Docker Compose configuration
+├── Dockerfile               # Docker configuration
+│
+├── static/                  # Static files directory
+│   ├── css/
+│   │   └── styles.css       # Common styles
+│   │
+│   └── js/
+│       ├── tailwind-config.js  # Tailwind configuration
+│       ├── main.js             # Shared JavaScript functions
+│       ├── index.js            # Home page scripts
+│       ├── debug.js            # Debug page scripts
+│       └── logs.js             # Logs page scripts
+│
+├── templates/               # HTML templates
+│   ├── index.html           # Home page template
+│   ├── debug.html           # Debug page template
+│   ├── logs.html            # Logs page template
+│   ├── header.html          # Shared header component
+│   └── footer.html          # Shared footer component
+│
+├── downloads/               # Directory for downloaded files
+│   └── app.log              # Application log file
+│
+└── logs/                    # Additional logs directory
 ```
 
 ## Advanced Features
@@ -142,7 +161,7 @@ The application includes two helpful pages for debugging:
 
 ### Common Issues
 
-1. **Images not downloading**:
+1. **Media not downloading**:
    - Check if the downloads directory has proper permissions
    - Ensure the container has write access to the volume
    - Look at the logs for detailed errors
@@ -155,12 +174,12 @@ The application includes two helpful pages for debugging:
 3. **Testing downloads directly**:
    ```bash
    # From inside the container
-   docker exec -it discord_image_downloader python test_download.py https://example.com/image.jpg
+   docker exec -it discord_downloader python test_download.py https://example.com/image.jpg
    ```
 
 4. **Manual volume permission fix**:
    ```bash
-   docker exec -it discord_image_downloader chmod -R 777 /app/downloads
+   docker exec -it discord_downloader chmod -R 777 /app/downloads
    ```
 
 ## Alternative Deployment Options
@@ -182,6 +201,15 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
 ```
 
 ## Changelog
+
+### v1.2.0 (2025-04-20)
+- Refactored to modular architecture
+- Separated HTML components (header, footer)
+- Organized JavaScript and CSS into separate files
+- Rebranded from "Discord Image Downloader" to "Discord Media Download"
+- Improved file structure for better maintainability
+- Enhanced media extraction from multiple sources
+- Optimized server-side file handling
 
 ### v1.1.0 (2025-04-20)
 - Added modern dark theme interface
@@ -229,6 +257,9 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
 - [ ] Image preview before download
 - [ ] Video/GIF thumbnail generation
 - [ ] Auto-categorization of downloaded files
+- [ ] User-defined naming patterns
+- [ ] Background download queue
+- [ ] Improved mobile support
 
 ## License
 

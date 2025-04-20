@@ -233,7 +233,7 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
 
 ## Changelog
 
-### v1.4.0 (2025-05-10)
+### v1.4.0 (2025-04-20)
 - Implemented template inheritance with a base layout template
 - Fixed header and footer display issues across all pages
 - Added proper CSS file reference consistency

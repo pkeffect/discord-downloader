@@ -19,7 +19,7 @@ RUN mkdir -p logs && chmod 777 logs
 COPY . .
 
 # Make the test script executable
-RUN chmod +x test_download.py
+RUN chmod +x utils/test_download.py
 
 # Set environment variables for better logging
 ENV PYTHONUNBUFFERED=1

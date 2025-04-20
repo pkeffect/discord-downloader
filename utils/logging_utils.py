@@ -11,30 +11,24 @@ def setup_logging():
     # Set up a StringIO object for in-memory logging
     log_stream = io.StringIO()
     
-    # Get environment variables for logging configuration, with defaults
-    console_log_level = os.environ.get('CONSOLE_LOG_LEVEL', 'DEBUG').upper()
-    file_log_level = os.environ.get('FILE_LOG_LEVEL', 'DEBUG').upper()
-    werkzeug_log_level = os.environ.get('WERKZEUG_LOG_LEVEL', 'INFO').upper()
-    
     # Create file handler for the main log file
     main_log_file = os.path.join(LOG_DIR, CONFIG['logging']['main_log'])
     file_handler = logging.FileHandler(main_log_file)
-    file_handler.setLevel(getattr(logging, file_log_level))
     
-    # Create separate log files for different components (still enabled)
+    # Create separate log files for different components
     download_log_file = os.path.join(LOG_DIR, CONFIG['logging']['downloads_log'])
     download_handler = logging.FileHandler(download_log_file)
-    download_handler.setLevel(getattr(logging, file_log_level))
+    download_handler.setLevel(logging.INFO)
     
     debug_log_file = os.path.join(LOG_DIR, CONFIG['logging']['debug_log'])
     debug_handler = logging.FileHandler(debug_log_file)
-    debug_handler.setLevel(logging.DEBUG)  # Always DEBUG level for debug log
+    debug_handler.setLevel(logging.DEBUG)
     
     error_log_file = os.path.join(LOG_DIR, CONFIG['logging']['errors_log'])
     error_handler = logging.FileHandler(error_log_file)
-    error_handler.setLevel(logging.ERROR)  # Always ERROR level for error log
+    error_handler.setLevel(logging.ERROR)
     
-    # Create filters for specific loggers but don't apply them unless configured to
+    # Create filters for specific loggers
     class DownloadFilter(logging.Filter):
         def filter(self, record):
             return record.name.startswith('discord_media_download.download')
@@ -47,15 +41,14 @@ def setup_logging():
         def filter(self, record):
             return record.levelname in ('ERROR', 'CRITICAL')
     
-    # Only apply filters if specifically requested (disabled by default)
-    if os.environ.get('USE_LOG_FILTERS', 'false').lower() == 'true':
-        download_handler.addFilter(DownloadFilter())
-        debug_handler.addFilter(DebugFilter())
-        error_handler.addFilter(ErrorFilter())
+    # Add filters to handlers
+    download_handler.addFilter(DownloadFilter())
+    debug_handler.addFilter(DebugFilter())
+    error_handler.addFilter(ErrorFilter())
     
-    # Create console handler with configurable log level
+    # Create console handler with a higher log level
     console_handler = logging.StreamHandler()
-    console_handler.setLevel(getattr(logging, console_log_level))
+    console_handler.setLevel(logging.INFO)  # Only show INFO and above in console
     
     # Create stream handler for in-memory logs
     stream_handler = logging.StreamHandler(log_stream)
@@ -83,16 +76,13 @@ def setup_logging():
         ]
     )
     
-    # Configure werkzeug logger separately based on env var
+    # Specifically silence werkzeug logs to reduce console spam
     werkzeug_logger = logging.getLogger('werkzeug')
-    werkzeug_logger.setLevel(getattr(logging, werkzeug_log_level))
+    werkzeug_logger.setLevel(logging.WARNING)
     
     # Get logger for the application
     logger = logging.getLogger('discord_media_download')
     
     logger.info(f"Logging initialized. Log directory: {LOG_DIR}")
-    logger.info(f"Console logging level: {console_log_level}")
-    logger.info(f"File logging level: {file_log_level}")
-    logger.info(f"Werkzeug logging level: {werkzeug_log_level}")
     
     return logger

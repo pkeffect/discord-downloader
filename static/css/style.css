@@ -48,6 +48,9 @@ body {
     overflow-y: auto;
     white-space: pre-wrap;
     font-family: monospace;
+    word-wrap: break-word;     /* Ensure text wraps */
+    overflow-x: hidden;        /* Hide horizontal overflow */
+    line-break: anywhere;      /* Break long lines */
 }
 
 .info { color: #3498db; }
@@ -67,4 +70,42 @@ body {
     50% {
         opacity: 0.6;
     }
+}
+
+/* Thumbnail styles */
+.thumbnail-container {
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1a1a1a;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.thumbnail-container img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* File grid styles */
+.file-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+.file-item {
+    background-color: #2a2a2a;
+    border-radius: 4px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: background-color 0.2s;
+}
+
+.file-item:hover {
+    background-color: #3a3a3a;
 }

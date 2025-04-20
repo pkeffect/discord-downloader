@@ -2,3 +2,5 @@ flask==2.3.3
 requests==2.31.0
 python-magic
 libmagic
+psutil==5.9.5
+Pillow==10.0.0

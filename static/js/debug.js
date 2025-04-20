@@ -10,6 +10,21 @@ document.addEventListener('DOMContentLoaded', function() {
     const autoRefreshIndicator = document.getElementById('auto-refresh-indicator');
     const lastRefreshSpan = document.getElementById('last-refresh');
     
+    // Pagination variables
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    let totalFiles = 0;
+    let filesList = [];
+    const prevPageBtn = document.getElementById('prev-page');
+    const nextPageBtn = document.getElementById('next-page');
+    const fileStartEl = document.getElementById('file-start');
+    const fileEndEl = document.getElementById('file-end');
+    const fileTotalEl = document.getElementById('file-total');
+    const filesGrid = document.getElementById('files-grid');
+    
+    // Initialize pagination
+    initPagination();
+    
     // Function to fetch debug data
     async function fetchDebugData() {
         try {
@@ -31,6 +46,9 @@ document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
                 autoRefreshIndicator.classList.remove('auto-refresh-animation');
             }, 1000);
+            
+            // Reinitialize pagination after refresh
+            initPagination();
             
         } catch (error) {
             console.error('Error fetching debug data:', error);
@@ -63,6 +81,95 @@ document.addEventListener('DOMContentLoaded', function() {
             stopAutoRefresh();
         }
     });
+    
+    // Initialize pagination
+    function initPagination() {
+        // Get all file items
+        const fileItems = document.querySelectorAll('.file-item');
+        filesList = Array.from(fileItems);
+        totalFiles = filesList.length;
+        
+        // Update total files count
+        if (fileTotalEl) {
+            fileTotalEl.textContent = totalFiles;
+        }
+        
+        // Show first page
+        updatePagination();
+        
+        // Setup pagination buttons
+        if (prevPageBtn) {
+            prevPageBtn.addEventListener('click', () => {
+                if (currentPage > 1) {
+                    currentPage--;
+                    updatePagination();
+                }
+            });
+        }
+        
+        if (nextPageBtn) {
+            nextPageBtn.addEventListener('click', () => {
+                const maxPages = Math.ceil(totalFiles / itemsPerPage);
+                if (currentPage < maxPages) {
+                    currentPage++;
+                    updatePagination();
+                }
+            });
+        }
+    }
+    
+    // Update pagination display
+    function updatePagination() {
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = Math.min(startIndex + itemsPerPage, totalFiles);
+        
+        // Update display counters
+        if (fileStartEl && fileEndEl) {
+            fileStartEl.textContent = totalFiles > 0 ? startIndex + 1 : 0;
+            fileEndEl.textContent = endIndex;
+        }
+        
+        // Hide all files
+        filesList.forEach(file => {
+            file.classList.add('hidden');
+        });
+        
+        // Show only current page files
+        for (let i = startIndex; i < endIndex; i++) {
+            if (filesList[i]) {
+                filesList[i].classList.remove('hidden');
+            }
+        }
+        
+        // Update buttons state
+        if (prevPageBtn) {
+            prevPageBtn.disabled = currentPage === 1;
+        }
+        
+        if (nextPageBtn) {
+            nextPageBtn.disabled = currentPage >= Math.ceil(totalFiles / itemsPerPage);
+        }
+    }
+    
+    // Load thumbnails for images
+    function loadThumbnails() {
+        const thumbnails = document.querySelectorAll('.thumbnail-container img');
+        thumbnails.forEach(img => {
+            const src = img.getAttribute('src');
+            if (src) {
+                // Check if file is an image
+                const isImage = /\.(jpg|jpeg|png|gif|webp)$/i.test(src);
+                if (isImage) {
+                    img.style.display = 'block';
+                } else {
+                    img.style.display = 'none';
+                }
+            }
+        });
+    }
+    
+    // Load thumbnails on initial load
+    loadThumbnails();
     
     // Start auto refresh
     function startAutoRefresh() {

@@ -3,8 +3,8 @@
 {% block title %}Discord Media Download{% endblock %}
 
 {% block content %}
-<div class="flex flex-col items-center justify-center">
-    <h1 class="text-4xl font-bold mb-6 text-center">Download Discord Media</h1>
+<div class="flex flex-col items-center justify-center mt-10">
+    <!-- Removed redundant heading here -->
     
     <div id="drop-area" class="drop-area w-full max-w-2xl h-64 bg-dark-800 rounded-lg flex items-center justify-center mb-8">
         <div class="text-center p-6">
@@ -34,7 +34,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
         <span id="alert-message"></span>
-        <button class="ml-3 -mr-1 bg-transparent hover:bg-white hover:bg-opacity-10 rounded-full p-1" onclick="document.getElementById('alert').style.display = 'none';">
+        <button class="ml-3 -mr-1 bg-transparent hover:bg-white hover:bg-opacity-10 rounded-full p-1">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg>

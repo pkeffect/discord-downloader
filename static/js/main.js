@@ -19,13 +19,39 @@ function showAlert(message, type) {
     // Clear any existing timeout
     if (window.alertTimeout) {
         clearTimeout(window.alertTimeout);
+        window.alertTimeout = null;
     }
     
-    // Keep error messages visible longer (10 seconds)
-    const timeout = type === 'success' ? 5000 : 10000;
-    window.alertTimeout = setTimeout(() => {
-        alert.style.display = 'none';
-    }, timeout);
+    // Only auto-hide success messages
+    if (type === 'success') {
+        window.alertTimeout = setTimeout(() => {
+            alert.style.display = 'none';
+        }, 5000);
+    }
+    // Error messages remain visible until manually closed by the X button
+}
+
+// Close alert when the close button is clicked
+document.addEventListener('DOMContentLoaded', function() {
+    const closeAlertButton = document.querySelector('#alert button');
+    if (closeAlertButton) {
+        closeAlertButton.addEventListener('click', function() {
+            document.getElementById('alert').style.display = 'none';
+        });
+    }
+    
+    // Update the current date and time in the footer
+    updateDateTime();
+    setInterval(updateDateTime, 60000); // Update every minute
+});
+
+// Update current date and time
+function updateDateTime() {
+    const datetimeElement = document.getElementById('current-datetime');
+    if (datetimeElement) {
+        const now = new Date();
+        datetimeElement.textContent = now.toLocaleString();
+    }
 }
 
 // Highlight active navigation item

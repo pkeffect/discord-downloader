@@ -1,6 +1,6 @@
 # Discord Media Download
 
-![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)
 ![Docker](https://img.shields.io/badge/docker-compatible-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 
@@ -22,7 +22,7 @@ A lightweight, containerized web application that allows you to easily download 
 - **Live Monitoring**: Real-time log viewing and auto-refreshing debug interface
 - **Advanced Filtering**: Search and filter logs by level (INFO, WARNING, ERROR)
 - **Containerized Deployment**: Easy setup with Docker
-- **Modular Architecture**: Organized codebase with separated components for easier maintenance
+- **Modular Architecture**: Well-organized codebase with proper separation of concerns
 
 ## Screenshots
 
@@ -82,22 +82,40 @@ A lightweight, containerized web application that allows you to easily download 
 
 The application consists of:
 
-- **Flask Backend**: Serves the web interface and handles download requests
+- **Flask Backend**: Modular design using blueprints for better organization
 - **Tailwind CSS**: For responsive and modern UI
 - **Docker**: For containerization and easy deployment
 - **JavaScript**: For real-time updates and UI interactions
-- **Modular Components**: Separated header, footer, and functionality files
+
+The application follows a clean, modular architecture with separation of concerns:
+
+- **Routes**: Handle HTTP requests and responses
+- **Services**: Contain business logic for downloading and processing media
+- **Utils**: Provide utility functions like logging
 
 ### File Structure
 
 ```
-discord-media-download/
+discord_media_download/
 │
-├── app.py                   # Main Flask application
-├── tenor_handler.py         # Handler for Tenor GIFs
-├── test_download.py         # Utility script for testing downloads
-├── compose.yaml             # Docker Compose configuration
-├── Dockerfile               # Docker configuration
+├── app.py                   # Main Flask application (minimal setup)
+├── config.py                # Centralized configuration
+│
+├── routes/                  # Route handlers organized by feature
+│   ├── __init__.py
+│   ├── main_routes.py       # Home page routes
+│   ├── download_routes.py   # Download functionality
+│   └── debug_routes.py      # Debug and logs routes
+│
+├── services/                # Business logic layer
+│   ├── __init__.py
+│   ├── download_service.py  # Media download logic
+│   ├── file_service.py      # File handling functionality
+│   └── tenor_service.py     # Handler for Tenor GIFs
+│
+├── utils/                   # Utility functions
+│   ├── __init__.py
+│   └── logging_utils.py     # Logging configuration
 │
 ├── static/                  # Static files directory
 │   ├── css/
@@ -202,6 +220,15 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
 
 ## Changelog
 
+### v1.3.0 (2025-04-20)
+- Completely refactored codebase to modular architecture
+- Implemented Flask blueprints for better route organization
+- Separated core functionality into service layers
+- Centralized configuration in config.py
+- Improved logging with dedicated utilities
+- Enhanced error handling throughout the application
+- Updated documentation with current architecture
+
 ### v1.2.0 (2025-04-20)
 - Refactored to modular architecture
 - Separated HTML components (header, footer)
@@ -226,28 +253,6 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
 - Support for images, GIFs, and videos
 - Automatic file extension detection
 - Tenor GIF special handling
-
-### v0.3.0 (2025-04-20)
-- Added better logs page with color-coded log levels
-- Improved filename generation for Discord URLs
-- Fixed handling of animated content
-- Added validation for file extensions
-- Added channel link detection and filtering
-
-### v0.2.0 (2025-04-20)
-- Added debug page with system information
-- Added HTML content extraction for Discord media
-- Fixed syntax errors and implementation bugs
-- Added browser console logging
-- Added in-app logs page
-- Improved error handling for network requests
-
-### v0.1.0 (2025-04-20)
-- Initial implementation
-- Basic drag and drop functionality
-- Simple Flask backend
-- Docker container setup
-- Basic error handling
 
 ## Planned Features
 

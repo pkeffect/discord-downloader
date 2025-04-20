@@ -1,6 +1,6 @@
-# Discord Media Download
+# 📥 Discord Media Download
 
-![Version](https://img.shields.io/badge/version-1.4.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.5.0-blue.svg)
 ![Docker](https://img.shields.io/badge/docker-compatible-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 
@@ -12,25 +12,30 @@ A lightweight, containerized web application that allows you to easily download 
   <em>Modern, dark-themed interface with easy drag & drop functionality</em>
 </p>
 
-## Features
+## ✨ Features
 
 - **Easy-to-Use Interface**: Simple drag-and-drop functionality with dark theme design
 - **Multiple Format Support**: Downloads images, GIFs, animated GIFs (as MP4), videos, and WebP files
 - **Intelligent URL Extraction**: Automatically extracts media URLs from Discord's HTML snippets
 - **Proper File Extensions**: Ensures all files have the correct extension based on content type
+- **Duplicate File Handling**: Automatically adds sequential numbering (001, 002, etc.) to duplicate filenames
 - **Tenor GIF Support**: Special handling for Tenor GIFs shared through Discord
 - **Live Monitoring**: Real-time log viewing and auto-refreshing debug interface
 - **Advanced Filtering**: Search and filter logs by level (INFO, WARNING, ERROR)
 - **Containerized Deployment**: Easy setup with Docker
 - **Modular Architecture**: Well-organized codebase with proper separation of concerns
 - **Templating System**: Consistent UI across all pages using Flask's template inheritance
+- **Thumbnail Previews**: Visual thumbnails for images in the debug file listing
+- **Pagination**: Organized file viewing with pagination for large collections
+- **Granular Logging**: Separate log files for different components and log levels
+- **Configuration System**: JSON-based configuration for easy customization
 
-## Screenshots
+## 📸 Screenshots
 
 <p align="center">
   <img src="https://github.com/yourusername/discord-media-download/raw/main/screenshots/debug-interface.png" alt="Debug Interface" width="600">
   <br>
-  <em>Auto-refreshing debug interface with file monitoring</em>
+  <em>Auto-refreshing debug interface with file monitoring and thumbnails</em>
 </p>
 
 <p align="center">
@@ -39,7 +44,7 @@ A lightweight, containerized web application that allows you to easily download 
   <em>Advanced log viewer with filtering and search capabilities</em>
 </p>
 
-## Quick Start
+## 🚀 Quick Start
 
 ### Prerequisites
 
@@ -54,30 +59,25 @@ A lightweight, containerized web application that allows you to easily download 
    cd discord-media-download
    ```
 
-2. Create the downloads folder with proper permissions:
-   ```bash
-   mkdir -p downloads
-   chmod 777 downloads
-   ```
-
-3. Start the container:
+2. The necessary directories will be created automatically by the application. Start the container:
    ```bash
    docker-compose up -d
    ```
 
-4. Access the application in your browser:
+3. Access the application in your browser:
    ```
    http://localhost:5000
    ```
 
-## Usage
+## 📖 Usage
 
 1. Open Discord in your browser or desktop app
 2. Find an image, GIF, or video you want to download
 3. Drag the media directly into the drop area in the Discord Media Download web app
 4. The file will be downloaded to the `downloads` folder with the appropriate file extension
+5. If a file with the same name already exists, a sequential number will be added (e.g., image_001.jpg)
 
-## Technical Details
+## 🔧 Technical Details
 
 ### Architecture
 
@@ -88,13 +88,15 @@ The application consists of:
 - **Docker**: For containerization and easy deployment
 - **JavaScript**: For real-time updates and UI interactions
 - **Jinja2 Templates**: For consistent UI with template inheritance
+- **JSON Configuration**: For flexible application settings
 
 The application follows a clean, modular architecture with separation of concerns:
 
 - **Routes**: Handle HTTP requests and responses
 - **Services**: Contain business logic for downloading and processing media
-- **Utils**: Provide utility functions like logging
+- **Utils**: Provide utility functions like logging and testing
 - **Templates**: Use base layout with template inheritance for consistent UI
+- **Config**: Central JSON-based configuration for easy customization
 
 ### File Structure
 
@@ -103,6 +105,7 @@ discord_media_download/
 │
 ├── app.py                   # Main Flask application
 ├── config.py                # Centralized configuration
+├── config.json              # User-editable configuration settings
 │
 ├── routes/                  # Route handlers organized by feature
 │   ├── __init__.py
@@ -118,11 +121,14 @@ discord_media_download/
 │
 ├── utils/                   # Utility functions
 │   ├── __init__.py
-│   └── logging_utils.py     # Logging configuration
+│   ├── logging_utils.py     # Logging configuration
+│   └── test_download.py     # Testing utility for downloads
 │
 ├── static/                  # Static files directory
 │   ├── css/
 │   │   └── styles.css       # Common styles
+│   │
+│   ├── favicon.ico          # Application favicon
 │   │
 │   └── js/
 │       ├── tailwind-config.js  # Tailwind configuration
@@ -140,21 +146,25 @@ discord_media_download/
 │   └── footer.html          # Footer component
 │
 ├── downloads/               # Directory for downloaded files
-│   └── app.log              # Application log file
 │
-└── logs/                    # Additional logs directory
+└── logs/                    # Application logs directory
+    ├── app.log              # Main application log
+    ├── downloads.log        # Download-specific logs
+    ├── errors.log           # Error-only logs
+    └── debug.log            # Debug-level logs
 ```
 
-## Advanced Features
+## 🔍 Advanced Features
 
 ### Auto-Refreshing Debug Page
 
 The debug page automatically refreshes every 5 seconds to show:
 
-- System information
-- Live list of downloaded files
+- System information (OS, Python version, memory usage)
+- Live list of downloaded files with thumbnails
 - Environment variables
 - Container status
+- Pagination for large file collections
 
 You can toggle auto-refresh, manually refresh, or view file details directly from this interface.
 
@@ -167,6 +177,7 @@ The logs page provides real-time monitoring capabilities:
 - Full-text search functionality
 - Auto-scroll to latest entries
 - Manual and automatic refresh options
+- Proper line wrapping for long log entries
 
 ### Template Inheritance
 
@@ -177,18 +188,70 @@ The application uses Flask's Jinja2 template inheritance for consistent UI acros
 - Header and footer components are included consistently across all pages
 - Each page can add its own custom scripts and styles when needed
 
-## Troubleshooting
+### Configuration System
+
+The application uses a flexible JSON-based configuration system:
+
+- User-editable `config.json` file for customizing application settings
+- Default configuration provided if no config file exists
+- Separate logging configuration for different components
+- Easily extensible for new features and settings
+
+## 📊 Logging Configuration
+
+The application provides flexible logging configuration through environment variables:
+
+### Environment Variables
+
+You can control the verbosity of logs in different outputs by setting these environment variables in your `compose.yaml` file:
+
+- `CONSOLE_LOG_LEVEL`: Controls logging level for console output (default: `DEBUG`)
+- `FILE_LOG_LEVEL`: Controls logging level for file output (default: `DEBUG`)
+- `WERKZEUG_LOG_LEVEL`: Controls Flask's web server logging (default: `INFO`)
+- `USE_LOG_FILTERS`: When set to `true`, enables component-specific log filtering (default: `false`)
+
+### Available Log Levels
+
+From most to least verbose:
+- `DEBUG`: All messages including detailed diagnostics
+- `INFO`: General operational information
+- `WARNING`: Issues that might need attention but don't affect operation
+- `ERROR`: Errors that prevent specific operations
+- `CRITICAL`: Critical errors that prevent application functioning
+
+### Log Files
+
+The application maintains several log files:
+- `app.log`: Main application log
+- `downloads.log`: Download-specific logs
+- `errors.log`: Error-only logs
+- `debug.log`: Debug-level logs
+
+### Example Configuration
+
+To reduce console output while maintaining detailed file logs:
+
+```yaml
+environment:
+  - CONSOLE_LOG_LEVEL=INFO
+  - FILE_LOG_LEVEL=DEBUG
+  - WERKZEUG_LOG_LEVEL=WARNING
+```
+
+## 🔧 Troubleshooting
 
 ### Debug and Logs Pages
 
 The application includes two helpful pages for debugging:
 
-- **Debug Page**: Shows system information, downloaded files, and environment variables
+- **Debug Page**: Shows system information, downloaded files with thumbnails, and environment variables
   - Access at: `http://localhost:5000/debug`
+  - Provides pagination for large file collections
 
 - **Logs Page**: Shows detailed application logs right in your browser
   - Access at: `http://localhost:5000/logs`
   - Logs are color-coded by level (INFO, DEBUG, WARNING, ERROR)
+  - Properly wraps long log lines for better readability
 
 ### Common Issues
 
@@ -205,7 +268,7 @@ The application includes two helpful pages for debugging:
 3. **Testing downloads directly**:
    ```bash
    # From inside the container
-   docker exec -it discord_downloader python test_download.py https://example.com/image.jpg
+   docker exec -it discord_downloader python -m utils.test_download https://example.com/image.jpg
    ```
 
 4. **Manual volume permission fix**:
@@ -213,7 +276,7 @@ The application includes two helpful pages for debugging:
    docker exec -it discord_downloader chmod -R 777 /app/downloads
    ```
 
-## Alternative Deployment Options
+## 🔄 Alternative Deployment Options
 
 ### Using Uvicorn (ASGI)
 
@@ -224,6 +287,8 @@ If you prefer using Uvicorn instead of the default Flask server:
 flask==2.3.3
 requests==2.31.0
 uvicorn==0.23.2
+psutil==5.9.5
+Pillow==10.0.0
 ```
 
 2. Modify the Dockerfile CMD:
@@ -231,15 +296,33 @@ uvicorn==0.23.2
 CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
 ```
 
-## Changelog
+## 📝 Changelog
+
+### v1.5.0 (2025-04-20)
+- Added environment variables for controlling logging levels
+- Moved app.log to logs directory from downloads
+- Fixed console logging verbosity with configurable options
+- Reorganized project structure (moved test_download.py to utils)
+- Removed redundant tenor_handler.py file
+- Fixed persistent error notifications with close button
+- Enhanced debug page with more system information
+- Improved error messages with better visibility
 
 ### v1.4.0 (2025-04-20)
+- Added duplicate file detection with automatic sequential numbering
+- Fixed log display overflow with proper line wrapping
+- Created separate log files for different components and log levels
+- Added thumbnail previews for files in the debug interface
+- Implemented pagination for file listings
+- Added favicon
+- Created JSON-based configuration system
+- Enhanced footer with license and version info
+- Added current date and time display
 - Implemented template inheritance with a base layout template
 - Fixed header and footer display issues across all pages
 - Added proper CSS file reference consistency
 - Updated template inclusion mechanism in app.py
 - Enhanced UI consistency across the application
-- Improved the context processor for template handling
 
 ### v1.3.0 (2025-04-20)
 - Completely refactored codebase to modular architecture
@@ -275,7 +358,7 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
 - Automatic file extension detection
 - Tenor GIF special handling
 
-## Planned Features
+## 🔮 Planned Features
 
 - [ ] Multiple file download support
 - [ ] Custom download location setting
@@ -287,15 +370,15 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
 - [ ] Background download queue
 - [ ] Improved mobile support
 
-## License
+## 📜 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Acknowledgements
+## 👏 Acknowledgements
 
 - [Flask](https://flask.palletsprojects.com/) - The web framework used
 - [Jinja2](https://jinja.palletsprojects.com/) - Template engine for Python
 - [Tailwind CSS](https://tailwindcss.com/) - For the UI
 - [Docker](https://www.docker.com/) - For containerization
 - [Python Requests](https://requests.readthedocs.io/) - For HTTP handling
-- [Discord Image and GIF Downloader](https://github.com/ztxv/discord-image-downloader) - For original project, thanks! 
+- [Discord Image and GIF Downloader](https://github.com/ztxv/discord-image-downloader) - For original project, thanks!

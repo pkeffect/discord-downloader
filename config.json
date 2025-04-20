@@ -1,0 +1,41 @@
+{
+    "app": {
+        "version": "1.4.0",
+        "name": "Discord Media Download",
+        "debug_mode": true,
+        "max_file_size": 104857600
+    },
+    "server": {
+        "port": 5000,
+        "host": "0.0.0.0",
+        "log_level": "INFO"
+    },
+    "logging": {
+        "main_log": "app.log",
+        "downloads_log": "downloads.log",
+        "errors_log": "errors.log",
+        "debug_log": "debug.log",
+        "rotation": {
+            "max_size": 10485760,
+            "backup_count": 5
+        },
+        "level": "DEBUG",
+        "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    },
+    "paths": {
+        "downloads": "downloads",
+        "logs": "logs",
+        "static": "static"
+    },
+    "features": {
+        "auto_refresh": {
+            "enabled": true,
+            "interval": 5000
+        },
+        "file_types": {
+            "images": [".jpg", ".jpeg", ".png", ".gif", ".webp"],
+            "videos": [".mp4", ".webm"],
+            "documents": [".pdf", ".txt", ".doc", ".docx"]
+        }
+    }
+}

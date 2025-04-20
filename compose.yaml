@@ -11,6 +11,11 @@ services:
       - PYTHONUNBUFFERED=1  # Ensures Python output is sent straight to terminal without buffering
       - PYTHONDONTWRITEBYTECODE=1
       - FLASK_ENV=development
+      # Logging configuration
+      - CONSOLE_LOG_LEVEL=DEBUG  # Set to INFO, WARNING, ERROR, or CRITICAL to reduce console output
+      - FILE_LOG_LEVEL=DEBUG     # Level for file logging
+      - WERKZEUG_LOG_LEVEL=INFO  # Controls Flask's web server logging
+      - USE_LOG_FILTERS=false    # Set to true to enable component-specific log filtering
     restart: unless-stopped
     logging:
       driver: "json-file"

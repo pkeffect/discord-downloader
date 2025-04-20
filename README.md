@@ -298,3 +298,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - [Tailwind CSS](https://tailwindcss.com/) - For the UI
 - [Docker](https://www.docker.com/) - For containerization
 - [Python Requests](https://requests.readthedocs.io/) - For HTTP handling
+- [Discord Image and GIF Downloader]{https://github.com/ztxv/discord-image-downloader} - For original project, thanks! 

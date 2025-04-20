@@ -1,108 +1,242 @@
-# Discord Image and GIF Downloader
-![image](https://github.com/user-attachments/assets/eaed13c4-02ef-4196-abc7-ab657f113df7)
+# Discord Image Downloader
 
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
+![Docker](https://img.shields.io/badge/docker-compatible-green.svg)
+![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 
-This project is a web application that allows users to easily download images and GIFs from Discord by dragging and dropping them into the browser. It uses Flask for the backend and vanilla JavaScript with Tailwind CSS for the frontend.
+A lightweight, containerized web application that allows you to easily download images, GIFs, and videos from Discord by simply dragging and dropping them into your browser.
+
+<p align="center">
+  <img src="https://github.com/yourusername/discord-image-downloader/raw/main/screenshots/main-interface.png" alt="Main Interface" width="600">
+  <br>
+  <em>Modern, dark-themed interface with easy drag & drop functionality</em>
+</p>
 
 ## Features
 
-- Drag and drop interface for Discord images and GIFs
-- Supports both image and GIF downloads
-- Real-time feedback with success/error messages
-- Responsive design using Tailwind CSS
+- **Easy-to-Use Interface**: Simple drag-and-drop functionality with dark theme design
+- **Multiple Format Support**: Downloads images, GIFs, animated GIFs (as MP4), videos, and WebP files
+- **Intelligent URL Extraction**: Automatically extracts media URLs from Discord's HTML snippets
+- **Proper File Extensions**: Ensures all files have the correct extension based on content type
+- **Tenor GIF Support**: Special handling for Tenor GIFs shared through Discord
+- **Live Monitoring**: Real-time log viewing and auto-refreshing debug interface
+- **Advanced Filtering**: Search and filter logs by level (INFO, WARNING, ERROR)
+- **Containerized Deployment**: Easy setup with Docker
 
-## Prerequisites
+## Screenshots
 
-Before you begin, ensure you have met the following requirements:
+<p align="center">
+  <img src="https://github.com/yourusername/discord-image-downloader/raw/main/screenshots/debug-interface.png" alt="Debug Interface" width="600">
+  <br>
+  <em>Auto-refreshing debug interface with file monitoring</em>
+</p>
 
-- Python 3.7 or higher
-- pip (Python package manager)
-- Git (optional, for cloning the repository)
+<p align="center">
+  <img src="https://github.com/yourusername/discord-image-downloader/raw/main/screenshots/logs-interface.png" alt="Logs Interface" width="600">
+  <br>
+  <em>Advanced log viewer with filtering and search capabilities</em>
+</p>
 
-## Setup and Installation
+## Quick Start
 
-1. Clone the repository or download the source code:   ```
+### Prerequisites
+
+- Docker
+- Docker Compose
+
+### Installation
+
+1. Clone this repository:
+   ```bash
    git clone https://github.com/yourusername/discord-image-downloader.git
-   cd discord-image-downloader   ```
-
-2. Create a virtual environment (optional but recommended):   ```
-   python -m venv venv   ```
-
-3. Activate the virtual environment:
-   - On Windows:     ```
-     venv\Scripts\activate     ```
-   - On macOS and Linux:     ```
-     source venv/bin/activate     ```
-
-4. Install the required packages:   ```
-   pip install flask requests   ```
-
-
-
-
-
-## Running the Application
-
-1. Navigate to the `imgdownloader` directory:
-   ```
-   cd imgdownloader
+   cd discord-image-downloader
    ```
 
-2. Run the Flask application:
+2. Create the downloads folder with proper permissions:
+   ```bash
+   mkdir -p downloads
+   chmod 777 downloads
    ```
-   python app.py
+
+3. Start the container:
+   ```bash
+   docker-compose up -d
    ```
 
-3. Open a web browser and go to `http://127.0.0.1:5000/`
+4. Access the application in your browser:
+   ```
+   http://localhost:5000
+   ```
 
-4. You should now see the Discord Image Downloader interface. You can drag and drop Discord image or GIF links into the designated area to download them.
+## Usage
 
-## How It Works
+1. Open Discord in your browser or desktop app
+2. Find an image, GIF, or video you want to download
+3. Drag the media directly into the drop area in the Discord Image Downloader web app
+4. The file will be downloaded to the `downloads` folder with the appropriate file extension
 
-### Backend (app.py)
+## Technical Details
 
-The `app.py` file contains the Flask application that handles the server-side logic:
+### Architecture
 
-- It sets up a route for the main page (`/`) that renders the `index.html` template.
-- It provides an endpoint (`/download_image`) that receives POST requests with image URLs.
-- When a valid Discord image or GIF URL is received, it downloads the file and saves it to the `static/downloads` directory.
-- It determines the correct file extension based on the content type of the downloaded file.
-- It returns JSON responses indicating the success or failure of the download operation.
+The application consists of:
 
-### Frontend (index.html)
+- **Flask Backend**: Serves the web interface and handles download requests
+- **Tailwind CSS**: For responsive and modern UI
+- **Docker**: For containerization and easy deployment
+- **JavaScript**: For real-time updates and UI interactions
 
-The `index.html` file contains the HTML structure, Tailwind CSS styling, and JavaScript for the user interface:
+### File Structure
 
-- It provides a drag-and-drop area for users to drop Discord image or GIF links.
-- It uses JavaScript to handle the drag-and-drop events and send AJAX requests to the backend.
-- It displays success or error messages using a floating alert at the top of the page.
-- The design is responsive and uses Tailwind CSS for styling.
+```
+.
+├── app.py                 # Flask application
+├── tenor_handler.py       # Special handler for Tenor URLs
+├── templates
+│   ├── index.html         # Main HTML page
+│   ├── debug.html         # Debug information page
+│   └── logs.html          # Log viewer page
+├── downloads              # Where downloaded files are saved
+├── logs                   # Application logs
+├── test_download.py       # Utility to test downloads
+├── requirements.txt       # Python dependencies
+├── Dockerfile             # Docker configuration
+└── docker-compose.yml     # Docker Compose configuration
+```
 
-## Customization
+## Advanced Features
 
-- To change the download directory, modify the `DOWNLOAD_FOLDER` variable in `app.py`.
-- To adjust the styling, you can modify the Tailwind classes in `index.html` or extend the Tailwind configuration.
+### Auto-Refreshing Debug Page
+
+The debug page automatically refreshes every 5 seconds to show:
+
+- System information
+- Live list of downloaded files
+- Environment variables
+- Container status
+
+You can toggle auto-refresh, manually refresh, or view file details directly from this interface.
+
+### Live Log Viewer
+
+The logs page provides real-time monitoring capabilities:
+
+- Color-coded log levels for better readability
+- Filtering by log level (INFO, WARNING, ERROR)
+- Full-text search functionality
+- Auto-scroll to latest entries
+- Manual and automatic refresh options
 
 ## Troubleshooting
 
-- If you encounter any "Permission denied" errors when saving files, ensure that the application has write permissions for the `static/downloads` directory.
-- If the downloads folder is not created automatically, create it manually in the `static` directory.
-- Make sure you're using a modern web browser that supports the Drag and Drop API.
+### Debug and Logs Pages
 
-## Contributing
+The application includes two helpful pages for debugging:
 
-Contributions to this project are welcome. Please fork the repository and submit a pull request with your changes.
+- **Debug Page**: Shows system information, downloaded files, and environment variables
+  - Access at: `http://localhost:5000/debug`
+
+- **Logs Page**: Shows detailed application logs right in your browser
+  - Access at: `http://localhost:5000/logs`
+  - Logs are color-coded by level (INFO, DEBUG, WARNING, ERROR)
+
+### Common Issues
+
+1. **Images not downloading**:
+   - Check if the downloads directory has proper permissions
+   - Ensure the container has write access to the volume
+   - Look at the logs for detailed errors
+
+2. **Viewing logs**:
+   ```bash
+   docker-compose logs -f discord_downloader
+   ```
+
+3. **Testing downloads directly**:
+   ```bash
+   # From inside the container
+   docker exec -it discord_image_downloader python test_download.py https://example.com/image.jpg
+   ```
+
+4. **Manual volume permission fix**:
+   ```bash
+   docker exec -it discord_image_downloader chmod -R 777 /app/downloads
+   ```
+
+## Alternative Deployment Options
+
+### Using Uvicorn (ASGI)
+
+If you prefer using Uvicorn instead of the default Flask server:
+
+1. Add `uvicorn` to requirements.txt:
+```
+flask==2.3.3
+requests==2.31.0
+uvicorn==0.23.2
+```
+
+2. Modify the Dockerfile CMD:
+```dockerfile
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
+```
+
+## Changelog
+
+### v1.1.0 (2025-04-20)
+- Added modern dark theme interface
+- Implemented auto-refreshing debug page
+- Created advanced log viewer with filtering and search
+- Added consistent navigation header and footer
+- Improved error notifications with longer display time
+- Enhanced visual feedback during drag and drop
+- Added responsive design for various screen sizes
+
+### v1.0.0 (2025-04-20)
+- Initial public release
+- Dockerized deployment
+- Support for images, GIFs, and videos
+- Automatic file extension detection
+- Tenor GIF special handling
+
+### v0.3.0 (2025-04-20)
+- Added better logs page with color-coded log levels
+- Improved filename generation for Discord URLs
+- Fixed handling of animated content
+- Added validation for file extensions
+- Added channel link detection and filtering
+
+### v0.2.0 (2025-04-20)
+- Added debug page with system information
+- Added HTML content extraction for Discord media
+- Fixed syntax errors and implementation bugs
+- Added browser console logging
+- Added in-app logs page
+- Improved error handling for network requests
+
+### v0.1.0 (2025-04-20)
+- Initial implementation
+- Basic drag and drop functionality
+- Simple Flask backend
+- Docker container setup
+- Basic error handling
+
+## Planned Features
+
+- [ ] Multiple file download support
+- [ ] Custom download location setting
+- [ ] Discord webhook integration
+- [ ] Image preview before download
+- [ ] Video/GIF thumbnail generation
+- [ ] Auto-categorization of downloaded files
 
 ## License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgements
 
-- Flask: https://flask.palletsprojects.com/
-- Tailwind CSS: https://tailwindcss.com/
-- Requests: https://docs.python-requests.org/
-
-## Support
-
-If you encounter any issues or have questions, please open an issue on the GitHub repository.
+- [Flask](https://flask.palletsprojects.com/) - The web framework used
+- [Tailwind CSS](https://tailwindcss.com/) - For the UI
+- [Docker](https://www.docker.com/) - For containerization
+- [Python Requests](https://requests.readthedocs.io/) - For HTTP handling

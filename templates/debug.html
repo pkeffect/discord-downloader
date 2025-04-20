@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Information - Discord Image Downloader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            900: '#121212',
+                            800: '#1a1a1a',
+                            700: '#2a2a2a',
+                            600: '#323232',
+                            500: '#3e3e3e',
+                            400: '#4e4e4e'
+                        },
+                        blurple: {
+                            500: '#7289DA',
+                            600: '#6278c5',
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e2e2e2;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #2a2a2a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #4e4e4e;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6278c5;
+        }
+        
+        .auto-refresh-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.6;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="bg-dark-800 border-b border-dark-600 py-3 px-4 shadow-md fixed w-full z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <svg class="w-8 h-8 text-blurple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                </svg>
+                <h1 class="text-xl font-bold">Discord Image Downloader</h1>
+            </div>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="/" class="text-gray-300 hover:text-white transition">Home</a></li>
+                    <li><a href="/debug" class="text-blurple-500 font-medium">Debug</a></li>
+                    <li><a href="/logs" class="text-gray-300 hover:text-white transition">Logs</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto flex-grow p-6 mt-16 mb-16">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold">Debug Information</h1>
+            <div class="flex items-center space-x-4">
+                <div id="refresh-status" class="text-sm text-gray-400">
+                    <span id="auto-refresh-indicator" class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                    <span id="last-refresh">Last refreshed: Just now</span>
+                </div>
+                <div class="flex space-x-2">
+                    <button id="refresh-btn" class="px-3 py-2 bg-blurple-600 text-white rounded hover:bg-blurple-500 transition flex items-center">
+                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                        </svg>
+                        Refresh Now
+                    </button>
+                    <button id="auto-refresh-btn" class="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-500 transition">Auto Refresh: ON</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="debug-content">
+            <!-- System Information -->
+            <div class="bg-dark-800 p-6 rounded-lg shadow-lg mb-6">
+                <h2 class="text-xl font-semibold mb-4 text-blurple-500">System Information</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-dark-700 p-4 rounded">
+                        <h3 class="font-bold mb-2">Download Directory</h3>
+                        <p class="mb-1"><span class="font-semibold">Path:</span> {{ debug_info.download_dir }}</p>
+                        <p class="mb-1"><span class="font-semibold">Exists:</span> 
+                            <span class="{{ 'text-green-400' if debug_info.download_dir_exists else 'text-red-400' }}">
+                                {{ debug_info.download_dir_exists }}
+                            </span>
+                        </p>
+                        <p class="mb-1"><span class="font-semibold">Writable:</span> 
+                            <span class="{{ 'text-green-400' if debug_info.download_dir_writable else 'text-red-400' }}">
+                                {{ debug_info.download_dir_writable }}
+                            </span>
+                        </p>
+                    </div>
+                    
+                    <div class="bg-dark-700 p-4 rounded">
+                        <h3 class="font-bold mb-2">App Directory</h3>
+                        <p>{{ debug_info.app_directory }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Files in Download Directory -->
+            <div class="bg-dark-800 p-6 rounded-lg shadow-lg mb-6">
+                <h2 class="text-xl font-semibold mb-4 text-blurple-500">Files in Download Directory</h2>
+                <div id="files-container">
+                    {% if debug_info.files_in_download_dir %}
+                        <div class="bg-dark-700 p-4 rounded">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                                {% for file in debug_info.files_in_download_dir %}
+                                    <div class="bg-dark-600 p-3 rounded flex flex-col hover:bg-dark-500 transition">
+                                        <div class="text-sm font-mono mb-2 truncate" title="{{ file }}">{{ file }}</div>
+                                        <div class="mt-auto">
+                                            <a href="/downloads/{{ file }}" class="text-blue-300 hover:underline text-sm flex items-center">
+                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                                </svg>
+                                                Download
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <p class="text-yellow-400">No files found in download directory.</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Environment Variables -->
+            <div class="bg-dark-800 p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-semibold mb-4 text-blurple-500">Environment Variables</h2>
+                <div class="bg-dark-700 p-4 rounded overflow-x-auto">
+                    <table class="min-w-full text-sm">
+                        <thead class="bg-dark-600">
+                            <tr>
+                                <th class="text-left py-2 px-4">Name</th>
+                                <th class="text-left py-2 px-4">Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for key, value in debug_info.environment.items() %}
+                                <tr class="border-t border-dark-600">
+                                    <td class="py-2 px-4 font-mono">{{ key }}</td>
+                                    <td class="py-2 px-4 font-mono">{{ value }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-dark-800 border-t border-dark-600 py-4 px-4 fixed bottom-0 w-full">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+            <div class="text-gray-400 text-sm mb-2 md:mb-0">
+                © 2025 Discord Image Downloader. All rights reserved.
+            </div>
+            <div class="flex space-x-4">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/>
+                    </svg>
+                </a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.937 4.937 0 004.604 3.417 9.868 9.868 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.054 0 13.999-7.496 13.999-13.986 0-.209 0-.42-.015-.63a9.936 9.936 0 002.46-2.548l-.047-.02z"/>
+                    </svg>
+                </a>
+                <a href="https://discord.com" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Auto refresh functionality
+        let autoRefreshEnabled = true;
+        let refreshInterval = 5000; // 5 seconds
+        let refreshTimer;
+        const refreshBtn = document.getElementById('refresh-btn');
+        const autoRefreshBtn = document.getElementById('auto-refresh-btn');
+        const autoRefreshIndicator = document.getElementById('auto-refresh-indicator');
+        const lastRefreshSpan = document.getElementById('last-refresh');
+        
+        // Function to fetch debug data
+        async function fetchDebugData() {
+            try {
+                const response = await fetch(window.location.href);
+                const html = await response.text();
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Extract the debug content from the fetched HTML
+                const newDebugContent = doc.getElementById('debug-content').innerHTML;
+                document.getElementById('debug-content').innerHTML = newDebugContent;
+                
+                // Update last refresh time
+                const now = new Date();
+                lastRefreshSpan.textContent = `Last refreshed: ${now.toLocaleTimeString()}`;
+                
+                // Add and remove pulse animation
+                autoRefreshIndicator.classList.add('auto-refresh-animation');
+                setTimeout(() => {
+                    autoRefreshIndicator.classList.remove('auto-refresh-animation');
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Error fetching debug data:', error);
+                lastRefreshSpan.textContent = `Last refresh failed: ${new Date().toLocaleTimeString()}`;
+                autoRefreshIndicator.classList.remove('auto-refresh-animation');
+                autoRefreshIndicator.style.backgroundColor = '#ef4444'; // Red color
+            }
+        }
+        
+        // Setup refresh button
+        refreshBtn.addEventListener('click', () => {
+            fetchDebugData();
+        });
+        
+        // Setup auto refresh button
+        autoRefreshBtn.addEventListener('click', () => {
+            autoRefreshEnabled = !autoRefreshEnabled;
+            
+            if (autoRefreshEnabled) {
+                autoRefreshBtn.textContent = 'Auto Refresh: ON';
+                autoRefreshBtn.classList.remove('bg-gray-600', 'hover:bg-gray-500');
+                autoRefreshBtn.classList.add('bg-green-600', 'hover:bg-green-500');
+                autoRefreshIndicator.style.backgroundColor = '#22c55e'; // Green color
+                startAutoRefresh();
+            } else {
+                autoRefreshBtn.textContent = 'Auto Refresh: OFF';
+                autoRefreshBtn.classList.remove('bg-green-600', 'hover:bg-green-500');
+                autoRefreshBtn.classList.add('bg-gray-600', 'hover:bg-gray-500');
+                autoRefreshIndicator.style.backgroundColor = '#6b7280'; // Gray color
+                stopAutoRefresh();
+            }
+        });
+        
+        // Start auto refresh
+        function startAutoRefresh() {
+            if (refreshTimer) clearInterval(refreshTimer);
+            refreshTimer = setInterval(fetchDebugData, refreshInterval);
+        }
+        
+        // Stop auto refresh
+        function stopAutoRefresh() {
+            if (refreshTimer) clearInterval(refreshTimer);
+        }
+        
+        // Initialize auto refresh
+        startAutoRefresh();
+    </script>
+</body>
+</html>

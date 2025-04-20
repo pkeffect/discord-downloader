@@ -1,0 +1,17 @@
+services:
+  discord_downloader:
+    build: .
+    container_name: discord_downloader
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./downloads:/app/downloads
+      - ./logs:/app/logs
+    environment:
+      - PYTHONUNBUFFERED=1  # Ensures Python output is sent straight to terminal without buffering
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

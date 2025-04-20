@@ -5,10 +5,12 @@ services:
     ports:
       - "5000:5000"
     volumes:
-      - ./downloads:/app/downloads
-      - ./logs:/app/logs
+      - ./downloads:/app/downloads:rw
+      - ./logs:/app/logs:rw
     environment:
       - PYTHONUNBUFFERED=1  # Ensures Python output is sent straight to terminal without buffering
+      - PYTHONDONTWRITEBYTECODE=1
+      - FLASK_ENV=development
     restart: unless-stopped
     logging:
       driver: "json-file"

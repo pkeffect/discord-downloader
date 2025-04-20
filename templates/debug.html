@@ -1,124 +1,108 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debug Information - Discord Media Download</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/static/js/tailwind-config.js"></script>
-    <link rel="stylesheet" href="/static/css/styles.css">
-</head>
-<body class="min-h-screen flex flex-col">
-    <!-- Include Header -->
-    <!-- Header will be inserted server-side -->
+{% extends "layout.html" %}
 
-    <!-- Main Content -->
-    <main class="container mx-auto flex-grow p-6 mt-16 mb-16">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-3xl font-bold">Debug Information</h1>
-            <div class="flex items-center space-x-4">
-                <div id="refresh-status" class="text-sm text-gray-400">
-                    <span id="auto-refresh-indicator" class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
-                    <span id="last-refresh">Last refreshed: Just now</span>
-                </div>
-                <div class="flex space-x-2">
-                    <button id="refresh-btn" class="px-3 py-2 bg-blurple-600 text-white rounded hover:bg-blurple-500 transition flex items-center">
-                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                        </svg>
-                        Refresh Now
-                    </button>
-                    <button id="auto-refresh-btn" class="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-500 transition">Auto Refresh: ON</button>
-                </div>
-            </div>
+{% block title %}Debug Information - Discord Media Download{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Debug Information</h1>
+    <div class="flex items-center space-x-4">
+        <div id="refresh-status" class="text-sm text-gray-400">
+            <span id="auto-refresh-indicator" class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+            <span id="last-refresh">Last refreshed: Just now</span>
         </div>
+        <div class="flex space-x-2">
+            <button id="refresh-btn" class="px-3 py-2 bg-blurple-600 text-white rounded hover:bg-blurple-500 transition flex items-center">
+                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                </svg>
+                Refresh Now
+            </button>
+            <button id="auto-refresh-btn" class="px-3 py-2 bg-green-600 text-white rounded hover:bg-green-500 transition">Auto Refresh: ON</button>
+        </div>
+    </div>
+</div>
+
+<div id="debug-content">
+    <!-- System Information -->
+    <div class="bg-dark-800 p-6 rounded-lg shadow-lg mb-6">
+        <h2 class="text-xl font-semibold mb-4 text-blurple-500">System Information</h2>
         
-        <div id="debug-content">
-            <!-- System Information -->
-            <div class="bg-dark-800 p-6 rounded-lg shadow-lg mb-6">
-                <h2 class="text-xl font-semibold mb-4 text-blurple-500">System Information</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="bg-dark-700 p-4 rounded">
-                        <h3 class="font-bold mb-2">Download Directory</h3>
-                        <p class="mb-1"><span class="font-semibold">Path:</span> {{ debug_info.download_dir }}</p>
-                        <p class="mb-1"><span class="font-semibold">Exists:</span> 
-                            <span class="{{ 'text-green-400' if debug_info.download_dir_exists else 'text-red-400' }}">
-                                {{ debug_info.download_dir_exists }}
-                            </span>
-                        </p>
-                        <p class="mb-1"><span class="font-semibold">Writable:</span> 
-                            <span class="{{ 'text-green-400' if debug_info.download_dir_writable else 'text-red-400' }}">
-                                {{ debug_info.download_dir_writable }}
-                            </span>
-                        </p>
-                    </div>
-                    
-                    <div class="bg-dark-700 p-4 rounded">
-                        <h3 class="font-bold mb-2">App Directory</h3>
-                        <p>{{ debug_info.app_directory }}</p>
-                    </div>
-                </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-dark-700 p-4 rounded">
+                <h3 class="font-bold mb-2">Download Directory</h3>
+                <p class="mb-1"><span class="font-semibold">Path:</span> {{ debug_info.download_dir }}</p>
+                <p class="mb-1"><span class="font-semibold">Exists:</span> 
+                    <span class="{{ 'text-green-400' if debug_info.download_dir_exists else 'text-red-400' }}">
+                        {{ debug_info.download_dir_exists }}
+                    </span>
+                </p>
+                <p class="mb-1"><span class="font-semibold">Writable:</span> 
+                    <span class="{{ 'text-green-400' if debug_info.download_dir_writable else 'text-red-400' }}">
+                        {{ debug_info.download_dir_writable }}
+                    </span>
+                </p>
             </div>
             
-            <!-- Files in Download Directory -->
-            <div class="bg-dark-800 p-6 rounded-lg shadow-lg mb-6">
-                <h2 class="text-xl font-semibold mb-4 text-blurple-500">Files in Download Directory</h2>
-                <div id="files-container">
-                    {% if debug_info.files_in_download_dir %}
-                        <div class="bg-dark-700 p-4 rounded">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                                {% for file in debug_info.files_in_download_dir %}
-                                    <div class="bg-dark-600 p-3 rounded flex flex-col hover:bg-dark-500 transition">
-                                        <div class="text-sm font-mono mb-2 truncate" title="{{ file }}">{{ file }}</div>
-                                        <div class="mt-auto">
-                                            <a href="/downloads/{{ file }}" class="text-blue-300 hover:underline text-sm flex items-center">
-                                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                                                </svg>
-                                                Download
-                                            </a>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% else %}
-                        <p class="text-yellow-400">No files found in download directory.</p>
-                    {% endif %}
-                </div>
-            </div>
-            
-            <!-- Environment Variables -->
-            <div class="bg-dark-800 p-6 rounded-lg shadow-lg">
-                <h2 class="text-xl font-semibold mb-4 text-blurple-500">Environment Variables</h2>
-                <div class="bg-dark-700 p-4 rounded overflow-x-auto">
-                    <table class="min-w-full text-sm">
-                        <thead class="bg-dark-600">
-                            <tr>
-                                <th class="text-left py-2 px-4">Name</th>
-                                <th class="text-left py-2 px-4">Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for key, value in debug_info.environment.items() %}
-                                <tr class="border-t border-dark-600">
-                                    <td class="py-2 px-4 font-mono">{{ key }}</td>
-                                    <td class="py-2 px-4 font-mono">{{ value }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+            <div class="bg-dark-700 p-4 rounded">
+                <h3 class="font-bold mb-2">App Directory</h3>
+                <p>{{ debug_info.app_directory }}</p>
             </div>
         </div>
-    </main>
+    </div>
     
-    <!-- Include Footer -->
-    <!-- Footer will be inserted server-side -->
+    <!-- Files in Download Directory -->
+    <div class="bg-dark-800 p-6 rounded-lg shadow-lg mb-6">
+        <h2 class="text-xl font-semibold mb-4 text-blurple-500">Files in Download Directory</h2>
+        <div id="files-container">
+            {% if debug_info.files_in_download_dir %}
+                <div class="bg-dark-700 p-4 rounded">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                        {% for file in debug_info.files_in_download_dir %}
+                            <div class="bg-dark-600 p-3 rounded flex flex-col hover:bg-dark-500 transition">
+                                <div class="text-sm font-mono mb-2 truncate" title="{{ file }}">{{ file }}</div>
+                                <div class="mt-auto">
+                                    <a href="/downloads/{{ file }}" class="text-blue-300 hover:underline text-sm flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+                                        </svg>
+                                        Download
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-yellow-400">No files found in download directory.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Environment Variables -->
+    <div class="bg-dark-800 p-6 rounded-lg shadow-lg">
+        <h2 class="text-xl font-semibold mb-4 text-blurple-500">Environment Variables</h2>
+        <div class="bg-dark-700 p-4 rounded overflow-x-auto">
+            <table class="min-w-full text-sm">
+                <thead class="bg-dark-600">
+                    <tr>
+                        <th class="text-left py-2 px-4">Name</th>
+                        <th class="text-left py-2 px-4">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, value in debug_info.environment.items() %}
+                        <tr class="border-t border-dark-600">
+                            <td class="py-2 px-4 font-mono">{{ key }}</td>
+                            <td class="py-2 px-4 font-mono">{{ value }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
 
-    <!-- Scripts -->
-    <script src="/static/js/main.js"></script>
-    <script src="/static/js/debug.js"></script>
-</body>
-</html>
+{% block extra_scripts %}
+<script src="/static/js/debug.js"></script>
+{% endblock %}

@@ -1,62 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Discord Media Download</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/static/js/tailwind-config.js"></script>
-    <link rel="stylesheet" href="/static/css/styles.css">
-</head>
-<body class="min-h-screen flex flex-col">
-    <!-- Include Header -->
-    <!-- Header will be inserted server-side -->
-    
-    <!-- Main Content -->
-    <main class="container mx-auto flex-grow flex flex-col items-center justify-center p-6 mt-16 mb-16">
-        <h1 class="text-4xl font-bold mb-6 text-center">Download Discord Media</h1>
-        
-        <div id="drop-area" class="drop-area w-full max-w-2xl h-64 bg-dark-800 rounded-lg flex items-center justify-center mb-8">
-            <div class="text-center p-6">
-                <svg class="w-16 h-16 mx-auto mb-4 text-blurple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
-                </svg>
-                <p class="text-xl text-gray-300 mb-2">Drag and drop content from Discord here</p>
-                <p class="text-sm text-gray-400">Supports images, GIFs, and videos</p>
-            </div>
-        </div>
-        
-        <div class="w-full max-w-2xl">
-            <div class="bg-dark-800 p-5 rounded-lg shadow-lg">
-                <h2 class="text-xl font-semibold mb-3 text-blurple-500">How to Use</h2>
-                <ol class="list-decimal list-inside space-y-2 text-gray-300">
-                    <li>Open Discord in your browser or desktop app</li>
-                    <li>Find the image, GIF, or video you want to download</li>
-                    <li>Click and drag the media directly into the drop area above</li>
-                    <li>The file will be saved to the downloads folder</li>
-                </ol>
-            </div>
-        </div>
-        
-        <!-- Notification Alert -->
-        <div id="alert" class="fixed top-20 left-1/2 transform -translate-x-1/2 px-4 py-3 rounded-lg text-white font-semibold flex items-center shadow-lg hidden">
-            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-            <span id="alert-message"></span>
-            <button class="ml-3 -mr-1 bg-transparent hover:bg-white hover:bg-opacity-10 rounded-full p-1" onclick="document.getElementById('alert').style.display = 'none';">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-        </div>
-    </main>
-    
-    <!-- Include Footer -->
-    <!-- Footer will be inserted server-side -->
+{% extends "layout.html" %}
 
-    <!-- Scripts -->
-    <script src="/static/js/main.js"></script>
-    <script src="/static/js/index.js"></script>
-</body>
-</html>
+{% block title %}Discord Media Download{% endblock %}
+
+{% block content %}
+<div class="flex flex-col items-center justify-center">
+    <h1 class="text-4xl font-bold mb-6 text-center">Download Discord Media</h1>
+    
+    <div id="drop-area" class="drop-area w-full max-w-2xl h-64 bg-dark-800 rounded-lg flex items-center justify-center mb-8">
+        <div class="text-center p-6">
+            <svg class="w-16 h-16 mx-auto mb-4 text-blurple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            <p class="text-xl text-gray-300 mb-2">Drag and drop content from Discord here</p>
+            <p class="text-sm text-gray-400">Supports images, GIFs, and videos</p>
+        </div>
+    </div>
+    
+    <div class="w-full max-w-2xl">
+        <div class="bg-dark-800 p-5 rounded-lg shadow-lg">
+            <h2 class="text-xl font-semibold mb-3 text-blurple-500">How to Use</h2>
+            <ol class="list-decimal list-inside space-y-2 text-gray-300">
+                <li>Open Discord in your browser or desktop app</li>
+                <li>Find the image, GIF, or video you want to download</li>
+                <li>Click and drag the media directly into the drop area above</li>
+                <li>The file will be saved to the downloads folder</li>
+            </ol>
+        </div>
+    </div>
+    
+    <!-- Notification Alert -->
+    <div id="alert" class="fixed top-20 left-1/2 transform -translate-x-1/2 px-4 py-3 rounded-lg text-white font-semibold flex items-center shadow-lg hidden">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <span id="alert-message"></span>
+        <button class="ml-3 -mr-1 bg-transparent hover:bg-white hover:bg-opacity-10 rounded-full p-1" onclick="document.getElementById('alert').style.display = 'none';">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="/static/js/index.js"></script>
+{% endblock %}

@@ -1,6 +1,6 @@
 # Discord Media Download
 
-![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.4.0-blue.svg)
 ![Docker](https://img.shields.io/badge/docker-compatible-green.svg)
 ![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 
@@ -23,6 +23,7 @@ A lightweight, containerized web application that allows you to easily download 
 - **Advanced Filtering**: Search and filter logs by level (INFO, WARNING, ERROR)
 - **Containerized Deployment**: Easy setup with Docker
 - **Modular Architecture**: Well-organized codebase with proper separation of concerns
+- **Templating System**: Consistent UI across all pages using Flask's template inheritance
 
 ## Screenshots
 
@@ -86,19 +87,21 @@ The application consists of:
 - **Tailwind CSS**: For responsive and modern UI
 - **Docker**: For containerization and easy deployment
 - **JavaScript**: For real-time updates and UI interactions
+- **Jinja2 Templates**: For consistent UI with template inheritance
 
 The application follows a clean, modular architecture with separation of concerns:
 
 - **Routes**: Handle HTTP requests and responses
 - **Services**: Contain business logic for downloading and processing media
 - **Utils**: Provide utility functions like logging
+- **Templates**: Use base layout with template inheritance for consistent UI
 
 ### File Structure
 
 ```
 discord_media_download/
 │
-├── app.py                   # Main Flask application (minimal setup)
+├── app.py                   # Main Flask application
 ├── config.py                # Centralized configuration
 │
 ├── routes/                  # Route handlers organized by feature
@@ -129,11 +132,12 @@ discord_media_download/
 │       └── logs.js             # Logs page scripts
 │
 ├── templates/               # HTML templates
+│   ├── layout.html          # Base template with header and footer
 │   ├── index.html           # Home page template
 │   ├── debug.html           # Debug page template
 │   ├── logs.html            # Logs page template
-│   ├── header.html          # Shared header component
-│   └── footer.html          # Shared footer component
+│   ├── header.html          # Header component
+│   └── footer.html          # Footer component
 │
 ├── downloads/               # Directory for downloaded files
 │   └── app.log              # Application log file
@@ -163,6 +167,15 @@ The logs page provides real-time monitoring capabilities:
 - Full-text search functionality
 - Auto-scroll to latest entries
 - Manual and automatic refresh options
+
+### Template Inheritance
+
+The application uses Flask's Jinja2 template inheritance for consistent UI across all pages:
+
+- Base layout template (`layout.html`) defines the overall page structure
+- Page-specific templates extend the base layout and inject content
+- Header and footer components are included consistently across all pages
+- Each page can add its own custom scripts and styles when needed
 
 ## Troubleshooting
 
@@ -220,6 +233,14 @@ CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000"]
 
 ## Changelog
 
+### v1.4.0 (2025-05-10)
+- Implemented template inheritance with a base layout template
+- Fixed header and footer display issues across all pages
+- Added proper CSS file reference consistency
+- Updated template inclusion mechanism in app.py
+- Enhanced UI consistency across the application
+- Improved the context processor for template handling
+
 ### v1.3.0 (2025-04-20)
 - Completely refactored codebase to modular architecture
 - Implemented Flask blueprints for better route organization
@@ -273,6 +294,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Acknowledgements
 
 - [Flask](https://flask.palletsprojects.com/) - The web framework used
+- [Jinja2](https://jinja.palletsprojects.com/) - Template engine for Python
 - [Tailwind CSS](https://tailwindcss.com/) - For the UI
 - [Docker](https://www.docker.com/) - For containerization
 - [Python Requests](https://requests.readthedocs.io/) - For HTTP handling

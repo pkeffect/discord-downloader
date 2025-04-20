@@ -15,11 +15,13 @@ app = Flask(__name__, static_folder='static', template_folder='templates')
 for directory in STATIC_DIRS:
     os.makedirs(directory, exist_ok=True)
 
-# Register the template include function
-def include_template(template_name):
-    return app.jinja_env.get_template(template_name).render()
-
-app.jinja_env.globals.update(include_template=include_template)
+# Add function to Jinja environment to include templates
+@app.context_processor
+def utility_processor():
+    def include_template(template_name):
+        return app.jinja_env.get_template(template_name).render()
+    
+    return {'include_template': include_template}
 
 # Register blueprints
 app.register_blueprint(main_bp)

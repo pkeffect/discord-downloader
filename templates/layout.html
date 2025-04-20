@@ -3,11 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Fix for -webkit-text-size-adjust error -->
+    <meta name="text-size-adjust" content="100%">
+    <meta name="-webkit-text-size-adjust" content="100%">
     <title>{% block title %}Discord Media Download{% endblock %}</title>
-    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/static/js/tailwind-config.js"></script>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <!-- Fixed favicon reference -->
+    <link rel="icon" href="/static/favicon-svg.svg" type="image/svg+xml">
+    <!-- Added defer to prevent layout shifting -->
+    <script src="https://cdn.tailwindcss.com" defer></script>
+    <script src="/static/js/tailwind-config.js" defer></script>
+    <!-- Fixed CSS filename reference -->
+    <link rel="stylesheet" href="/static/css/style.css">
     {% block extra_head %}{% endblock %}
 </head>
 <body class="min-h-screen flex flex-col">

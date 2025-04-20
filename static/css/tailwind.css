@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* Base Styles for Discord Media Download */
 body {
     background-color: #121212;

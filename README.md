@@ -55,7 +55,7 @@ A lightweight, containerized web application that allows you to easily download 
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/yourusername/discord-media-download.git
+   git clone https://github.com/pkeffect/discord-downloader.git
    cd discord-media-download
    ```
 

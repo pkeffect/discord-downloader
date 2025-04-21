@@ -61,7 +61,7 @@ A lightweight, containerized web application that allows you to easily download 
 
 2. The necessary directories will be created automatically by the application. Start the container:
    ```bash
-   docker-compose up -d
+   docker compose up -d
    ```
 
 3. Access the application in your browser:

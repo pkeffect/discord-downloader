@@ -19,12 +19,12 @@ for directory in STATIC_DIRS:
 os.makedirs(LOG_DIR, exist_ok=True)
 os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-# Add route to serve favicon.ico directly
-@app.route('/static/favicon.ico')
+# Add route to serve favicon-svg.svg directly
+@app.route('/static/favicon-svg.svg')
 def favicon():
-    """Serve favicon.ico from static directory"""
+    """Serve favicon-svg.svg from static directory"""
     return send_from_directory(os.path.join(app.root_path, 'static'),
-                             'favicon.ico', mimetype='image/vnd.microsoft.icon')
+                             'favicon-svg.svg', mimetype='image/vnd.microsoft.icon')
 
 # Add function to Jinja environment to include templates
 @app.context_processor

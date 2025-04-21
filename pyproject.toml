@@ -1,0 +1,14 @@
+[project]
+name = "discord-downloader"
+version = "1.0.4"
+description = "A simple locally hosted discord image downloader where you drag and drop to download the images into a folder. "
+readme = "README.md"
+authors = [
+    { name = "Joseph Wayne DeArmond", email = "josephdearmond@gmail.com" }
+]
+requires-python = ">=3.12"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
